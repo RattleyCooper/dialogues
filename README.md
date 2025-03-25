@@ -11,6 +11,7 @@ Requires framecounter.
 ## Example
 
 ```nim
+import dialogues
 import framecounter
 import os
 
