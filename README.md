@@ -1,38 +1,19 @@
+# Dialogues
+
+A small dialogue system for nim, with dialogue builder.
+
+## Requirements
+
+Requires framecounter.
+
+`nimble install https://github.com/RattleyCooper/framecounter`
+
+## Example
+
+```nim
 import framecounter
 import os
-import macros
 
-type
-  DialogueLine[T] = ref object
-    character: T
-    text: string
-    frameDelay: int
-
-var clock = FrameCounter(fps: 1)
-
-proc play[T](lines: seq[DialogueLine[T]], cb: proc(d: DialogueLine[T]) {.closure.}, index: int = 0) =
-  if index >= lines.len: return
-  
-  let line = lines[index]
-  clock.run after(line.frameDelay) do():
-    line.cb()
-    lines.play(cb, index + 1)
-
-macro dialogueBlock(T: typedesc, body: untyped): untyped =
-  result = quote do:
-    var lines: seq[DialogueLine[`T`]]
-    
-    template line(c: `T`, t: string, f: int) =
-      lines.add(DialogueLine[`T`](
-        character: c,
-        text: t,
-        frameDelay: f
-      ))
-    
-    `body`
-    lines
-
-if isMainModule:
   type
     Npc = ref object
       name: string
@@ -51,6 +32,7 @@ if isMainModule:
   let alice = Npc(name: "Alice")
   let bob = Npc(name: "Bob")
 
+  # Manually create Dialogue Lines...
   var dialogue = @[
     DialogueLine[Npc](character: alice, text: "Bob, have you seen my sword?", frameDelay: 0),
     DialogueLine[Npc](character: bob,   text: "Not since yesterday.",        frameDelay: 2),
@@ -58,6 +40,7 @@ if isMainModule:
     DialogueLine[Npc](character: bob,   text: "Check the tavern?",           frameDelay: 2)
   ]
 
+  # Create dialogue using dialogueBlock.
   var dialogue2 = dialogueBlock(Npc):
     alice.line("Bob, have you seen my sword?", 0)
     bob.line("Not since yesterday.", 2)
@@ -69,3 +52,4 @@ if isMainModule:
 
   while true:
     clock.tick()
+```
