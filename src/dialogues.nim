@@ -2,15 +2,16 @@ import framecounter
 import os
 import macros
 
-type
-  DialogueLine[T] = ref object
-    character: T
-    text: string
-    frameDelay: int
-
 var clock = FrameCounter(fps: 1)
 
-proc play[T](lines: seq[DialogueLine[T]], cb: proc(d: DialogueLine[T]) {.closure.}, index: int = 0) =
+type
+  DialogueLine*[T] = ref object
+    character*: T
+    text*: string
+    frameDelay*: int
+
+
+proc play*[T](lines: seq[DialogueLine[T]], cb: proc(d: DialogueLine[T]) {.closure.}, index: int = 0) =
   if index >= lines.len: return
   
   let line = lines[index]
@@ -18,7 +19,7 @@ proc play[T](lines: seq[DialogueLine[T]], cb: proc(d: DialogueLine[T]) {.closure
     line.cb()
     lines.play(cb, index + 1)
 
-macro dialogueBlock(T: typedesc, body: untyped): untyped =
+macro dialogueBlock*(T: typedesc, body: untyped): untyped =
   result = quote do:
     var lines: seq[DialogueLine[`T`]]
     
