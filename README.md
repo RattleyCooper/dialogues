@@ -4,7 +4,7 @@ A small dialogue system for nim, with dialogue builder.
 
 ## Requirements
 
-Requires framecounter.
+Requires [framecounter](https://github.com/RattleyCooper/framecounter).
 
 `nimble install https://github.com/RattleyCooper/framecounter`
 
